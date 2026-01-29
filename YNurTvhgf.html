@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Santri - Dayah Madinatuddiniyah Babussalam</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            color: #333;
+            line-height: 1.6;
+            padding-bottom: 40px;
+            overflow-x: hidden;
+        }
+        
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2c5c3e 0%, #1e3c2a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loading-logo {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 50%;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+        
+        .loading-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 50%;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+        
+        .loading-text {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .welcome-text {
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-top: 15px;
+            text-align: center;
+            padding: 0 20px;
+            animation: fadeIn 2s ease;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+            opacity: 0;
+            animation: fadeInContent 0.5s ease forwards;
+            animation-delay: 1.5s;
+        }
+        
+        @keyframes fadeInContent {
+            to {
+                opacity: 1;
+            }
+        }
+        
+        header {
+            background: linear-gradient(135deg, #2c5c3e 0%, #1e3c2a 100%);
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 25px;
+            border-radius: 0 0 15px 15px;
+        }
+        
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo {
+            width: 70px;
+            height: 70px;
+            margin-right: 15px;
+            background-color: white;
+            border-radius: 50%;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+        
+        .logo img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 50%;
+        }
+        
+        .header-text h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        
+        .header-text p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .user-info {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 8px 15px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .user-icon {
+            width: 36px;
+            height: 36px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c5c3e;
+        }
+        
+        .user-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        /* Stats Container */
+        .stats-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 25px;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .stat-card {
+            flex: 1;
+            min-width: 150px;
+            background-color: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+        }
+        
+        .stat-card.active {
+            border-color: #2c5c3e;
+            background-color: #f0f7f2;
+        }
+        
+        .stat-card.all {
+            border-top: 4px solid #2c5c3e;
+        }
+        
+        .stat-card.male {
+            border-top: 4px solid #1976d2;
+        }
+        
+        .stat-card.female {
+            border-top: 4px solid #c2185b;
+        }
+        
+        .stat-value {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            line-height: 1;
+        }
+        
+        .stat-card.all .stat-value {
+            color: #2c5c3e;
+        }
+        
+        .stat-card.male .stat-value {
+            color: #1976d2;
+        }
+        
+        .stat-card.female .stat-value {
+            color: #c2185b;
+        }
+        
+        .stat-label {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .stat-label i {
+            font-size: 1rem;
+        }
+        
+        .table-container {
+            background-color: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            overflow-x: auto;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+        
+        thead {
+            background-color: #2c5c3e;
+            color: white;
+        }
+        
+        th {
+            padding: 16px 12px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 0.95rem;
+            white-space: nowrap;
+        }
+        
+        tbody tr {
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s;
+        }
+        
+        tbody tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        tbody tr:nth-child(even) {
+            background-color: #f8f8f8;
+        }
+        
+        tbody tr:nth-child(even):hover {
+            background-color: #f0f0f0;
+        }
+        
+        td {
+            padding: 14px 12px;
+            font-size: 0.9rem;
+            vertical-align: top;
+        }
+        
+        .gender-badge {
+            display: inline-block;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+        
+        .male-badge {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .female-badge {
+            background-color: #fce4ec;
+            color: #c2185b;
+        }
+        
+        .action-btn {
+            background-color: #2c5c3e;
+            color: white;
+            border: none;
+            padding: 8px 14px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            gap: 5px;
+        }
+        
+        .action-btn:hover {
+            background-color: #1e3c2a;
+            transform: translateY(-2px);
+        }
+        
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+        
+        .search-box input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+            background-color: white;
+        }
+        
+        .search-box input:focus {
+            outline: none;
+            border-color: #2c5c3e;
+            box-shadow: 0 0 0 3px rgba(44, 92, 62, 0.15);
+        }
+        
+        .search-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #777;
+        }
+        
+        .sort-options {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .sort-options select {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background-color: white;
+            cursor: pointer;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 25px;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 15px;
+        }
+        
+        .modal-header h3 {
+            color: #2c5c3e;
+            font-size: 1.3rem;
+        }
+        
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #777;
+            transition: color 0.2s;
+        }
+        
+        .close-modal:hover {
+            color: #333;
+        }
+        
+        .whatsapp-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .whatsapp-number {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #333;
+            text-align: center;
+            padding: 12px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            word-break: break-all;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .whatsapp-link {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #25D366;
+            color: white;
+            text-decoration: none;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            gap: 10px;
+            text-align: center;
+        }
+        
+        .whatsapp-link:hover {
+            background-color: #128C7E;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(37, 211, 102, 0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+            color: #666;
+            font-size: 0.85rem;
+        }
+        
+        .mobile-view-info {
+            display: none;
+            background-color: #e8f5e9;
+            padding: 12px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #2c5c3e;
+            font-size: 0.9rem;
+            border-left: 4px solid #2c5c3e;
+            align-items: center;
+        }
+        
+        .mobile-view-info i {
+            margin-right: 8px;
+        }
+        
+        .filter-active-info {
+            background-color: #e3f2fd;
+            padding: 10px 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: #1976d2;
+            font-size: 0.9rem;
+            border-left: 4px solid #1976d2;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .filter-active-info button {
+            background-color: transparent;
+            border: 1px solid #1976d2;
+            color: #1976d2;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+        }
+        
+        .filter-active-info button:hover {
+            background-color: #1976d2;
+            color: white;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .header-content {
+                justify-content: center;
+                text-align: center;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-left {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .logo {
+                margin-right: 0;
+                margin-bottom: 12px;
+            }
+            
+            .user-info {
+                margin-top: 10px;
+            }
+            
+            .search-box {
+                min-width: 100%;
+            }
+            
+            .sort-options {
+                width: 100%;
+                justify-content: space-between;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header-text h1 {
+                font-size: 1.3rem;
+            }
+            
+            .header-text p {
+                font-size: 0.85rem;
+            }
+            
+            .welcome-text {
+                font-size: 1.2rem;
+            }
+            
+            .loading-text {
+                font-size: 1rem;
+            }
+            
+            .stats-container {
+                gap: 10px;
+            }
+            
+            .stat-card {
+                min-width: calc(50% - 10px);
+                padding: 18px 12px;
+            }
+            
+            .stat-value {
+                font-size: 1.9rem;
+            }
+            
+            .mobile-view-info {
+                display: flex;
+            }
+            
+            table {
+                min-width: 1000px;
+            }
+            
+            .action-btn span {
+                display: none;
+            }
+            
+            .action-btn i {
+                margin-right: 0;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            header {
+                padding: 15px 0;
+            }
+            
+            .logo {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .loading-logo {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .loading-text {
+                font-size: 0.9rem;
+            }
+            
+            .welcome-text {
+                font-size: 1.1rem;
+            }
+            
+            .header-text h1 {
+                font-size: 1.2rem;
+            }
+            
+            .stats-container {
+                flex-direction: column;
+            }
+            
+            .stat-card {
+                min-width: 100%;
+                flex-direction: row;
+                justify-content: space-between;
+                text-align: left;
+                padding: 18px 20px;
+            }
+            
+            .stat-value {
+                margin-bottom: 0;
+                font-size: 1.8rem;
+            }
+            
+            .stat-label {
+                font-size: 0.85rem;
+            }
+            
+            th, td {
+                padding: 12px 10px;
+                font-size: 0.85rem;
+            }
+            
+            .search-box input {
+                padding: 10px 15px 10px 40px;
+                font-size: 0.9rem;
+            }
+            
+            .sort-options {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .sort-options select {
+                width: 100%;
+            }
+            
+            .modal-content {
+                padding: 20px;
+            }
+            
+            .modal-header h3 {
+                font-size: 1.2rem;
+            }
+            
+            .whatsapp-number {
+                font-size: 1.2rem;
+                padding: 10px;
+            }
+        }
+        
+        @media (max-width: 360px) {
+            .header-text h1 {
+                font-size: 1.1rem;
+            }
+            
+            .stat-value {
+                font-size: 1.6rem;
+            }
+            
+            .stat-card {
+                padding: 15px 18px;
+            }
+            
+            .user-name {
+                font-size: 0.85rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-logo">
+            <img src="https://madinatuddiniyahbabussalam.dayah.id/media/2021.09/logo-dyah21.png" alt="Logo Dayah" onerror="this.src='https://via.placeholder.com/120?text=Logo'">
+        </div>
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Memuat data santri...</div>
+        <div class="welcome-text">Selamat Datang, Nurul Alfalah</div>
+    </div>
+    
+    <header>
+        <div class="container">
+            <div class="header-content">
+                <div class="header-left">
+                    <div class="logo">
+                        <img src="https://madinatuddiniyahbabussalam.dayah.id/media/2021.09/logo-dyah21.png" alt="Logo Dayah Madinatuddiniyah Babussalam" onerror="this.src='https://via.placeholder.com/70?text=Logo'">
+                    </div>
+                    <div class="header-text">
+                        <h1>Dayah Madinatuddiniyah Babussalam</h1>
+                        <p>Data Santri yang Telah Mendaftar</p>
+                    </div>
+                </div>
+                <div class="user-info">
+                    <div class="user-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-name">Nurul Alfalah</div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container" id="main-content">
+        <div class="mobile-view-info">
+            <i class="fas fa-info-circle"></i>
+            Geser ke kanan/kiri untuk melihat semua data
+        </div>
+        
+        <!-- Filter info (akan muncul saat filter aktif) -->
+        <div class="filter-active-info" id="filter-info" style="display: none;">
+            <div>
+                <i class="fas fa-filter"></i>
+                <span id="filter-text">Menampilkan semua santri</span>
+            </div>
+            <button id="clear-filter">Hapus Filter</button>
+        </div>
+        
+        <!-- Stats Container -->
+        <div class="stats-container">
+            <div class="stat-card all active" id="stat-all">
+                <div class="stat-value" id="total-santri">42</div>
+                <div class="stat-label">
+                    <i class="fas fa-users"></i>
+                    <span>Semua Santri</span>
+                </div>
+            </div>
+            
+            <div class="stat-card male" id="stat-male">
+                <div class="stat-value" id="total-laki">18</div>
+                <div class="stat-label">
+                    <i class="fas fa-male"></i>
+                    <span>Santri Laki-laki</span>
+                </div>
+            </div>
+            
+            <div class="stat-card female" id="stat-female">
+                <div class="stat-value" id="total-perempuan">24</div>
+                <div class="stat-label">
+                    <i class="fas fa-female"></i>
+                    <span>Santri Perempuan</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="search-container">
+            <div class="search-box">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="search-input" placeholder="Cari santri berdasarkan nama, tempat lahir, atau orang tua...">
+            </div>
+            <div class="sort-options">
+                <span>Urutkan:</span>
+                <select id="sort-select">
+                    <option value="nama">Nama (A-Z)</option>
+                    <option value="nama-desc">Nama (Z-A)</option>
+                    <option value="tanggal-lahir">Tanggal Lahir (Terlama)</option>
+                    <option value="tanggal-lahir-desc">Tanggal Lahir (Terbaru)</option>
+                </select>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table id="santri-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>Nama Lengkap Santri</th>
+                        <th>Jenis Kelamin</th>
+                        <th>Tempat Lahir</th>
+                        <th>Tanggal Lahir</th>
+                        <th>Nama Ayah</th>
+                        <th>Nama Ibu</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body">
+                    <!-- Data akan dimasukkan oleh JavaScript -->
+                </tbody>
+            </table>
+        </div>
+        
+        <div class="footer">
+            <p>Dayah Madinatuddiniyah Babussalam &copy; 2023 - Sistem Pendaftaran Santri</p>
+        </div>
+    </main>
+    
+    <!-- Modal untuk menampilkan nomor WhatsApp -->
+    <div class="modal" id="whatsapp-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Informasi Kontak WhatsApp</h3>
+                <button class="close-modal" id="close-modal">&times;</button>
+            </div>
+            <div class="whatsapp-info">
+                <div>
+                    <strong>Nama Santri:</strong> <span id="modal-nama"></span>
+                </div>
+                <div>
+                    <strong>Nama Ayah:</strong> <span id="modal-ayah"></span>
+                </div>
+                <div>
+                    <strong>Nomor WhatsApp Aktif:</strong>
+                    <div class="whatsapp-number" id="modal-nomor"></div>
+                </div>
+                <a href="#" target="_blank" id="modal-whatsapp-link" class="whatsapp-link">
+                    <i class="fab fa-whatsapp"></i> <span>Chat via WhatsApp</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data santri
+        const dataSantri = [
+            {no: 1, nama: "Salsabila", jenisKelamin: "Perempuan", tempatLahir: "Mutiara", tanggalLahir: "23/07/2013", namaAyah: "Zulfikar", namaIbu: "Ernawati", whatsapp: "82289206896"},
+            {no: 2, nama: "Fani Azhari Marwa", jenisKelamin: "Perempuan", tempatLahir: "Pondok Baru", tanggalLahir: "17/08/2013", namaAyah: "Ahmad Jaiz Hakim", namaIbu: "Ema Riski", whatsapp: "82253379313"},
+            {no: 3, nama: "Kayla Nadifa", jenisKelamin: "Perempuan", tempatLahir: "Sigli", tanggalLahir: "04/07/2014", namaAyah: "Dodi Novandi", namaIbu: "Maryati", whatsapp: "82269810785"},
+            {no: 4, nama: "Sultan", jenisKelamin: "Laki-Laki", tempatLahir: "Bener Meriah", tanggalLahir: "18/09/2013", namaAyah: "Isra", namaIbu: "Fina Arfiani", whatsapp: "82247351700"},
+            {no: 5, nama: "Syifa Afifah", jenisKelamin: "Perempuan", tempatLahir: "Jelobok", tanggalLahir: "18/03/2013", namaAyah: "Jamaluddin", namaIbu: "Fitri Yuliana", whatsapp: "85288690031"},
+            {no: 6, nama: "Safa Alana Ruhmi", jenisKelamin: "Perempuan", tempatLahir: "Pondok Ulung", tanggalLahir: "19/11/2012", namaAyah: "Rumsah", namaIbu: "Almisrawati", whatsapp: "82370332233"},
+            {no: 7, nama: "Fatih Utama", jenisKelamin: "Laki-Laki", tempatLahir: "Kute Kering", tanggalLahir: "05/09/2013", namaAyah: "Mulyadi", namaIbu: "Kadariah", whatsapp: "85378840680"},
+            {no: 8, nama: "Hayrani Diara", jenisKelamin: "Perempuan", tempatLahir: "Muyang Kute", tanggalLahir: "18/10/2013", namaAyah: "Wendikha Ihtiara", namaIbu: "Maisa Astarina", whatsapp: "82214607934"},
+            {no: 9, nama: "Bima Anwar", jenisKelamin: "Laki-Laki", tempatLahir: "Muyang Kute", tanggalLahir: "09/09/2013", namaAyah: "Heri Sahputra", namaIbu: "Nasrah", whatsapp: "82214607934"},
+            {no: 10, nama: "M. Munzir Al Habib", jenisKelamin: "Laki-Laki", tempatLahir: "Sigli", tanggalLahir: "14/06/2014", namaAyah: "Hairiadi", namaIbu: "Maulidar", whatsapp: "85189411836"},
+            {no: 11, nama: "Zakki Syahlefi", jenisKelamin: "Laki-Laki", tempatLahir: "Pidie", tanggalLahir: "13/07/2013", namaAyah: "Faisal Muchtar", namaIbu: "Julia Ainal Wardah", whatsapp: "85262953000"},
+            {no: 12, nama: "Ghifari Zaidan", jenisKelamin: "Laki-Laki", tempatLahir: "Bener Meriah", tanggalLahir: "16/08/2013", namaAyah: "Abdullah Zainal", namaIbu: "Sri Wahyuni", whatsapp: "82236948486"},
+            {no: 13, nama: "Muhammad Syakir", jenisKelamin: "Laki-Laki", tempatLahir: "Sigli", tanggalLahir: "23/03/2014", namaAyah: "Mustafaruddin", namaIbu: "Evayani", whatsapp: "85358448989"},
+            {no: 14, nama: "Fadil Alfarizi", jenisKelamin: "Laki-Laki", tempatLahir: "Pondok Ulung", tanggalLahir: "14/10/2012", namaAyah: "M Yunan", namaIbu: "Rika Hidayati", whatsapp: "81324578597"},
+            {no: 15, nama: "Muhammad Fadil", jenisKelamin: "Laki-Laki", tempatLahir: "Bener Ayu", tanggalLahir: "10/11/2013", namaAyah: "Muhammad Amin", namaIbu: "Rasyidah", whatsapp: "82310665456"},
+            {no: 16, nama: "Zakiratul Khaira", jenisKelamin: "Perempuan", tempatLahir: "Puja Mulia", tanggalLahir: "10/10/2013", namaAyah: "Ismail Hasbi", namaIbu: "Rukiah Usman", whatsapp: "82273476213"},
+            {no: 17, nama: "Sahru Ramadhan", jenisKelamin: "Laki-Laki", tempatLahir: "Penosan Jaya", tanggalLahir: "02/07/2014", namaAyah: "Saripudin", namaIbu: "Runah", whatsapp: "85360526216"},
+            {no: 18, nama: "Humaira Sabiqa", jenisKelamin: "Perempuan", tempatLahir: "Blang Kolak Ll", tanggalLahir: "06/09/2013", namaAyah: "Aliman Arada", namaIbu: "Ida Laila", whatsapp: "81294266637"},
+            {no: 19, nama: "Silvia Ayska", jenisKelamin: "Perempuan", tempatLahir: "Purwosari", tanggalLahir: "16/09/2013", namaAyah: "Mulia Setiawan", namaIbu: "Himaya", whatsapp: "85207250533"},
+            {no: 20, nama: "Maysarah", jenisKelamin: "Perempuan", tempatLahir: "Bener Meriah", tanggalLahir: "13/05/2014", namaAyah: "Riduwansyah", namaIbu: "Lailawati", whatsapp: "8136173511"},
+            {no: 21, nama: "Ketrin Salwa Olivia", jenisKelamin: "Perempuan", tempatLahir: "Langkat", tanggalLahir: "06/07/2013", namaAyah: "Herman", namaIbu: "Devi Yusnita", whatsapp: "82219680011"},
+            {no: 22, nama: "Nurul Fadhilah", jenisKelamin: "Perempuan", tempatLahir: "Bandar", tanggalLahir: "22/07/2014", namaAyah: "Rusli", namaIbu: "Malinda Umar", whatsapp: "82276766090"},
+            {no: 23, nama: "Mahmuda", jenisKelamin: "Laki-Laki", tempatLahir: "Bener Kelipah Selatan", tanggalLahir: "15/12/2013", namaAyah: "Abdullah", namaIbu: "Sulastri", whatsapp: "85219728797"},
+            {no: 24, nama: "Naisya", jenisKelamin: "Perempuan", tempatLahir: "Lewa Jadi", tanggalLahir: "27/05/2013", namaAyah: "Syafi'i", namaIbu: "Rosmania", whatsapp: "85189983224"},
+            {no: 25, nama: "Cut Rina", jenisKelamin: "Perempuan", tempatLahir: "Aceh Tengah", tanggalLahir: "26/02/2014", namaAyah: "Mahdi", namaIbu: "Rasmawati", whatsapp: "81262710616"},
+            {no: 26, nama: "Alpandi Raihan", jenisKelamin: "Laki-Laki", tempatLahir: "Bener Meriah", tanggalLahir: "14/04/2014", namaAyah: "Edi Kurniawan", namaIbu: "Haulida", whatsapp: "81361676164"},
+            {no: 27, nama: "Maula Rizkani", jenisKelamin: "Laki-Laki", tempatLahir: "Janarata", tanggalLahir: "09/11/2013", namaAyah: "Nasir Fahmi", namaIbu: "Asnah Brsaragih", whatsapp: "81370719644"},
+            {no: 28, nama: "Sabar Iman", jenisKelamin: "Laki-Laki", tempatLahir: "Pondok Ulung", tanggalLahir: "29/06/2013", namaAyah: "Muhammad Yusuf", namaIbu: "Salina", whatsapp: "85191148618"},
+            {no: 29, nama: "Panisa Ramadani", jenisKelamin: "Perempuan", tempatLahir: "Pondok Baru", tanggalLahir: "01/08/2013", namaAyah: "Irwansyah", namaIbu: "Dewi Susantu", whatsapp: "85319170154"},
+            {no: 30, nama: "Syakira Khairunnisa", jenisKelamin: "Perempuan", tempatLahir: "Wonosari", tanggalLahir: "11/02/2014", namaAyah: "Misrun", namaIbu: "Ilawawati", whatsapp: "85370052433"},
+            {no: 31, nama: "Syakira Khairun Nisa", jenisKelamin: "Perempuan", tempatLahir: "Wonosari", tanggalLahir: "02/02/2014", namaAyah: "Misrun", namaIbu: "Ilawati", whatsapp: "85370052433"},
+            {no: 32, nama: "Syakira Khairunnisa", jenisKelamin: "Perempuan", tempatLahir: "Wonosari", tanggalLahir: "11/02/2014", namaAyah: "Misrun", namaIbu: "Ilawati", whatsapp: "82282436626"},
+            {no: 33, nama: "Mardiah", jenisKelamin: "Perempuan", tempatLahir: "Jelobok", tanggalLahir: "01/03/2013", namaAyah: "Basri", namaIbu: "Julidar", whatsapp: "82218989727"},
+            {no: 34, nama: "Haekal", jenisKelamin: "Laki-Laki", tempatLahir: "Mener Meriah", tanggalLahir: "18/04/2014", namaAyah: "Radiansyah", namaIbu: "Warni", whatsapp: "82319114854"},
+            {no: 35, nama: "Diva", jenisKelamin: "Laki-Laki", tempatLahir: "Batin Temas Mumanang", tanggalLahir: "20/07/2013", namaAyah: "Abdul Aziz", namaIbu: "Sanima", whatsapp: "81370236508"},
+            {no: 36, nama: "Kenza Akramajaya", jenisKelamin: "Laki-Laki", tempatLahir: "Bener Meriah", tanggalLahir: "26/12/2013", namaAyah: "Wantari", namaIbu: "Ernawati", whatsapp: "82315520199"},
+            {no: 37, nama: "Raisa Afrilia", jenisKelamin: "Perempuan", tempatLahir: "Benara", tanggalLahir: "16/04/2014", namaAyah: "Almunadi", namaIbu: "Ruaida", whatsapp: "85261274954"},
+            {no: 38, nama: "Aqila Selistiya Ramadani", jenisKelamin: "Perempuan", tempatLahir: "Cianjur", tanggalLahir: "29/07/2013", namaAyah: "Misbahudin", namaIbu: "Aimarni", whatsapp: "82214061552"},
+            {no: 39, nama: "Widia Wati", jenisKelamin: "Perempuan", tempatLahir: "Simpur", tanggalLahir: "10/12/2010", namaAyah: "Jailani", namaIbu: "Asmawati", whatsapp: "82370726985"},
+            {no: 40, nama: "Shofa Amira", jenisKelamin: "Perempuan", tempatLahir: "Simpang Kurnia", tanggalLahir: "29/04/2014", namaAyah: "Halidan", namaIbu: "Halimatussakdiah", whatsapp: "82294982208"},
+            {no: 41, nama: "Dara Anggraini", jenisKelamin: "Perempuan", tempatLahir: "Jelobok", tanggalLahir: "04/05/2013", namaAyah: "Salman", namaIbu: "Jasmiati", whatsapp: "81285492138"},
+            {no: 42, nama: "Aqila Selistiya Ramadani", jenisKelamin: "Perempuan", tempatLahir: "Cianjur", tanggalLahir: "29/07/2013", namaAyah: "Misbahuddin", namaIbu: "Aimarni", whatsapp: "85178017984"}
+        ];
+        
+        // Elemen DOM
+        const tableBody = document.getElementById('table-body');
+        const searchInput = document.getElementById('search-input');
+        const sortSelect = document.getElementById('sort-select');
+        const modal = document.getElementById('whatsapp-modal');
+        const closeModal = document.getElementById('close-modal');
+        const modalNama = document.getElementById('modal-nama');
+        const modalAyah = document.getElementById('modal-ayah');
+        const modalNomor = document.getElementById('modal-nomor');
+        const modalWhatsappLink = document.getElementById('modal-whatsapp-link');
+        const statAll = document.getElementById('stat-all');
+        const statMale = document.getElementById('stat-male');
+        const statFemale = document.getElementById('stat-female');
+        const filterInfo = document.getElementById('filter-info');
+        const filterText = document.getElementById('filter-text');
+        const clearFilterBtn = document.getElementById('clear-filter');
+        const loadingScreen = document.getElementById('loading-screen');
+        
+        // Nama pengguna
+        const userName = "Nurul Alfalah";
+        
+        // Variabel untuk filter
+        let currentFilter = 'all'; // 'all', 'male', 'female'
+        let currentSearch = '';
+        let currentSort = 'nama';
+        
+        // Fungsi untuk menambahkan angka 0 di depan nomor WhatsApp
+        function formatWhatsAppNumber(whatsapp) {
+            let number = whatsapp.toString();
+            if (number.startsWith('0')) {
+                return number;
+            }
+            return '0' + number;
+        }
+        
+        // Fungsi untuk mengurutkan data
+        function sortData(data, sortBy) {
+            return [...data].sort((a, b) => {
+                switch(sortBy) {
+                    case 'nama':
+                        return a.nama.localeCompare(b.nama);
+                    case 'nama-desc':
+                        return b.nama.localeCompare(a.nama);
+                    case 'tanggal-lahir':
+                        return new Date(a.tanggalLahir.split('/').reverse().join('-')) - new Date(b.tanggalLahir.split('/').reverse().join('-'));
+                    case 'tanggal-lahir-desc':
+                        return new Date(b.tanggalLahir.split('/').reverse().join('-')) - new Date(a.tanggalLahir.split('/').reverse().join('-'));
+                    default:
+                        return a.nama.localeCompare(b.nama);
+                }
+            });
+        }
+        
+        // Fungsi untuk memfilter data berdasarkan pencarian
+        function filterDataBySearch(data, searchTerm) {
+            if (!searchTerm) return data;
+            
+            const term = searchTerm.toLowerCase();
+            return data.filter(santri => 
+                santri.nama.toLowerCase().includes(term) ||
+                santri.tempatLahir.toLowerCase().includes(term) ||
+                santri.namaAyah.toLowerCase().includes(term) ||
+                santri.namaIbu.toLowerCase().includes(term)
+            );
+        }
+        
+        // Fungsi untuk memfilter data berdasarkan jenis kelamin
+        function filterDataByGender(data, gender) {
+            if (gender === 'all') return data;
+            return data.filter(santri => santri.jenisKelamin === (gender === 'male' ? 'Laki-Laki' : 'Perempuan'));
+        }
+        
+        // Fungsi untuk mendapatkan data yang sudah difilter dan diurutkan
+        function getFilteredAndSortedData() {
+            let filteredData = filterDataByGender(dataSantri, currentFilter);
+            filteredData = filterDataBySearch(filteredData, currentSearch);
+            return sortData(filteredData, currentSort);
+        }
+        
+        // Fungsi untuk menghitung statistik
+        function calculateStats() {
+            const total = dataSantri.length;
+            const laki = dataSantri.filter(s => s.jenisKelamin === 'Laki-Laki').length;
+            const perempuan = dataSantri.filter(s => s.jenisKelamin === 'Perempuan').length;
+            
+            document.getElementById('total-santri').textContent = total;
+            document.getElementById('total-laki').textContent = laki;
+            document.getElementById('total-perempuan').textContent = perempuan;
+        }
+        
+        // Fungsi untuk memperbarui tampilan statistik
+        function updateStatsView() {
+            // Reset semua stat card
+            statAll.classList.remove('active');
+            statMale.classList.remove('active');
+            statFemale.classList.remove('active');
+            
+            // Aktifkan stat card sesuai filter
+            if (currentFilter === 'all') {
+                statAll.classList.add('active');
+            } else if (currentFilter === 'male') {
+                statMale.classList.add('active');
+            } else if (currentFilter === 'female') {
+                statFemale.classList.add('active');
+            }
+        }
+        
+        // Fungsi untuk memperbarui info filter
+        function updateFilterInfo() {
+            if (currentFilter === 'all') {
+                filterInfo.style.display = 'none';
+            } else {
+                filterInfo.style.display = 'flex';
+                const filterType = currentFilter === 'male' ? 'Laki-laki' : 'Perempuan';
+                filterText.textContent = `Menampilkan santri ${filterType} saja`;
+            }
+        }
+        
+        // Fungsi untuk merender tabel
+        function renderTable() {
+            const data = getFilteredAndSortedData();
+            tableBody.innerHTML = '';
+            
+            if (data.length === 0) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td colspan="8" style="text-align: center; padding: 30px; color: #666;">
+                        <i class="fas fa-search" style="font-size: 2rem; margin-bottom: 10px; display: block; color: #aaa;"></i>
+                        <p>Tidak ada data santri yang ditemukan.</p>
+                    </td>
+                `;
+                tableBody.appendChild(row);
+            } else {
+                data.forEach((santri, index) => {
+                    const row = document.createElement('tr');
+                    
+                    // Tentukan kelas gender
+                    const genderClass = santri.jenisKelamin === 'Laki-Laki' ? 'male-badge' : 'female-badge';
+                    
+                    row.innerHTML = `
+                        <td>${index + 1}</td>
+                        <td>${santri.nama}</td>
+                        <td><span class="gender-badge ${genderClass}">${santri.jenisKelamin}</span></td>
+                        <td>${santri.tempatLahir}</td>
+                        <td>${santri.tanggalLahir}</td>
+                        <td>${santri.namaAyah}</td>
+                        <td>${santri.namaIbu}</td>
+                        <td><button class="action-btn" data-index="${santri.no - 1}"><i class="fab fa-whatsapp"></i> <span>Lihat WhatsApp</span></button></td>
+                    `;
+                    
+                    tableBody.appendChild(row);
+                });
+            }
+            
+            // Tambahkan event listener untuk tombol WhatsApp
+            document.querySelectorAll('.action-btn').forEach(button => {
+                button.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    showWhatsappModal(dataSantri[index]);
+                });
+            });
+        }
+        
+        // Fungsi untuk menampilkan modal WhatsApp
+        function showWhatsappModal(santri) {
+            modalNama.textContent = santri.nama;
+            modalAyah.textContent = santri.namaAyah;
+            
+            // Format nomor WhatsApp dengan menambahkan 0 di depan
+            const formattedNumber = formatWhatsAppNumber(santri.whatsapp);
+            modalNomor.textContent = formattedNumber;
+            
+            // Format nomor untuk link WhatsApp (menghapus 0 di depan dan menambahkan 62)
+            let phoneNumber = santri.whatsapp.toString();
+            phoneNumber = phoneNumber.replace(/\D/g, '');
+            
+            if (phoneNumber.startsWith('0')) {
+                phoneNumber = phoneNumber.substring(1);
+            }
+            
+            phoneNumber = '62' + phoneNumber;
+            
+            modalWhatsappLink.href = `https://wa.me/${phoneNumber}`;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+        
+        // Fungsi untuk mengatur filter
+        function setFilter(filter) {
+            currentFilter = filter;
+            updateStatsView();
+            updateFilterInfo();
+            renderTable();
+        }
+        
+        // Fungsi untuk menyembunyikan loading dan menampilkan konten
+        function hideLoadingScreen() {
+            // Sembunyikan loading screen setelah 2 detik (simulasi loading)
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+            }, 2000);
+        }
+        
+        // Fungsi untuk menginisialisasi aplikasi
+        function initApp() {
+            // Hitung statistik
+            calculateStats();
+            
+            // Render tabel awal
+            renderTable();
+            
+            // Event listener untuk pencarian
+            searchInput.addEventListener('input', function() {
+                currentSearch = this.value;
+                renderTable();
+            });
+            
+            // Event listener untuk pengurutan
+            sortSelect.addEventListener('change', function() {
+                currentSort = this.value;
+                renderTable();
+            });
+            
+            // Event listener untuk statistik filter
+            statAll.addEventListener('click', function() {
+                setFilter('all');
+            });
+            
+            statMale.addEventListener('click', function() {
+                setFilter('male');
+            });
+            
+            statFemale.addEventListener('click', function() {
+                setFilter('female');
+            });
+            
+            // Event listener untuk menghapus filter
+            clearFilterBtn.addEventListener('click', function() {
+                setFilter('all');
+            });
+            
+            // Event listener untuk menutup modal
+            closeModal.addEventListener('click', function() {
+                modal.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            });
+            
+            // Tutup modal ketika klik di luar konten modal
+            window.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Tutup modal dengan tombol ESC
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape' && modal.style.display === 'flex') {
+                    modal.style.display = 'none';
+                    document.body.style.overflow = 'auto';
+                }
+            });
+            
+            // Sembunyikan loading screen setelah halaman dimuat
+            window.addEventListener('load', hideLoadingScreen);
+            
+            // Jika halaman sudah dimuat, langsung sembunyikan loading
+            if (document.readyState === 'complete') {
+                hideLoadingScreen();
+            }
+        }
+        
+        // Inisialisasi aplikasi ketika halaman dimuat
+        document.addEventListener('DOMContentLoaded', initApp);
+    </script>
+</body>
+</html>
