@@ -18,12 +18,106 @@
             color: #333;
             line-height: 1.6;
             padding-bottom: 40px;
+            overflow-x: hidden;
         }
         
+        /* Loading Screen */
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #2c5c3e 0%, #1e3c2a 100%);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+        
+        .loading-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+        
+        .loading-logo {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 50%;
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+        
+        .loading-logo img {
+            max-width: 100%;
+            max-height: 100%;
+            border-radius: 50%;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 20px;
+        }
+        
+        .loading-text {
+            color: white;
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-top: 10px;
+            text-align: center;
+        }
+        
+        .welcome-text {
+            color: white;
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-top: 15px;
+            text-align: center;
+            padding: 0 20px;
+            animation: fadeIn 2s ease;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        /* Main Content */
         .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 15px;
+            opacity: 0;
+            animation: fadeInContent 0.5s ease forwards;
+            animation-delay: 1.5s;
+        }
+        
+        @keyframes fadeInContent {
+            to {
+                opacity: 1;
+            }
         }
         
         header {
@@ -32,13 +126,19 @@
             padding: 20px 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             margin-bottom: 25px;
+            border-radius: 0 0 15px 15px;
         }
         
         .header-content {
             display: flex;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: space-between;
             flex-wrap: wrap;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
         }
         
         .logo {
@@ -71,7 +171,33 @@
             opacity: 0.9;
         }
         
-        /* Stats Container Revisi */
+        .user-info {
+            background-color: rgba(255, 255, 255, 0.15);
+            padding: 8px 15px;
+            border-radius: 50px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            backdrop-filter: blur(10px);
+        }
+        
+        .user-icon {
+            width: 36px;
+            height: 36px;
+            background-color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #2c5c3e;
+        }
+        
+        .user-name {
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+        
+        /* Stats Container */
         .stats-container {
             display: flex;
             justify-content: space-between;
@@ -447,11 +573,22 @@
             .header-content {
                 justify-content: center;
                 text-align: center;
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-left {
+                flex-direction: column;
+                text-align: center;
             }
             
             .logo {
                 margin-right: 0;
                 margin-bottom: 12px;
+            }
+            
+            .user-info {
+                margin-top: 10px;
             }
             
             .search-box {
@@ -471,6 +608,14 @@
             
             .header-text p {
                 font-size: 0.85rem;
+            }
+            
+            .welcome-text {
+                font-size: 1.2rem;
+            }
+            
+            .loading-text {
+                font-size: 1rem;
             }
             
             .stats-container {
@@ -515,6 +660,19 @@
             .logo {
                 width: 60px;
                 height: 60px;
+            }
+            
+            .loading-logo {
+                width: 100px;
+                height: 100px;
+            }
+            
+            .loading-text {
+                font-size: 0.9rem;
+            }
+            
+            .welcome-text {
+                font-size: 1.1rem;
             }
             
             .header-text h1 {
@@ -588,25 +746,47 @@
             .stat-card {
                 padding: 15px 18px;
             }
+            
+            .user-name {
+                font-size: 0.85rem;
+            }
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div class="loading-screen" id="loading-screen">
+        <div class="loading-logo">
+            <img src="https://madinatuddiniyahbabussalam.dayah.id/media/2021.09/logo-dyah21.png" alt="Logo Dayah" onerror="this.src='https://via.placeholder.com/120?text=Logo'">
+        </div>
+        <div class="loading-spinner"></div>
+        <div class="loading-text">Memuat data santri...</div>
+        <div class="welcome-text">Selamat Datang, Admin</div>
+    </div>
+    
     <header>
         <div class="container">
             <div class="header-content">
-                <div class="logo">
-                    <img src="https://madinatuddiniyahbabussalam.dayah.id/media/2021.09/logo-dyah21.png" alt="Logo Dayah Madinatuddiniyah Babussalam">
+                <div class="header-left">
+                    <div class="logo">
+                        <img src="https://madinatuddiniyahbabussalam.dayah.id/media/2021.09/logo-dyah21.png" alt="Logo Dayah Madinatuddiniyah Babussalam" onerror="this.src='https://via.placeholder.com/70?text=Logo'">
+                    </div>
+                    <div class="header-text">
+                        <h1>Dayah Madinatuddiniyah Babussalam</h1>
+                        <p>Data Santri yang Telah Mendaftar</p>
+                    </div>
                 </div>
-                <div class="header-text">
-                    <h1>Dayah Madinatuddiniyah Babussalam</h1>
-                    <p>Data Santri yang Telah Mendaftar</p>
+                <div class="user-info">
+                    <div class="user-icon">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="user-name">Admin</div>
                 </div>
             </div>
         </div>
     </header>
     
-    <main class="container">
+    <main class="container" id="main-content">
         <div class="mobile-view-info">
             <i class="fas fa-info-circle"></i>
             Geser ke kanan/kiri untuk melihat semua data
@@ -621,7 +801,7 @@
             <button id="clear-filter">Hapus Filter</button>
         </div>
         
-        <!-- Stats Container Revisi -->
+        <!-- Stats Container -->
         <div class="stats-container">
             <div class="stat-card all active" id="stat-all">
                 <div class="stat-value" id="total-santri">42</div>
@@ -685,7 +865,7 @@
         </div>
         
         <div class="footer">
-            <p>Dayah Madinatuddiniyah Babussalam &copy; 2026 - Edi Samsuar</p>
+            <p>Dayah Madinatuddiniyah Babussalam &copy; 2023 - Sistem Pendaftaran Santri</p>
         </div>
     </main>
     
@@ -777,6 +957,10 @@
         const filterInfo = document.getElementById('filter-info');
         const filterText = document.getElementById('filter-text');
         const clearFilterBtn = document.getElementById('clear-filter');
+        const loadingScreen = document.getElementById('loading-screen');
+        
+        // Nama pengguna
+        const userName = "Admin";
         
         // Variabel untuk filter
         let currentFilter = 'all'; // 'all', 'male', 'female'
@@ -952,6 +1136,14 @@
             renderTable();
         }
         
+        // Fungsi untuk menyembunyikan loading dan menampilkan konten
+        function hideLoadingScreen() {
+            // Sembunyikan loading screen setelah 2 detik (simulasi loading)
+            setTimeout(() => {
+                loadingScreen.classList.add('hidden');
+            }, 2000);
+        }
+        
         // Fungsi untuk menginisialisasi aplikasi
         function initApp() {
             // Hitung statistik
@@ -1011,6 +1203,14 @@
                     document.body.style.overflow = 'auto';
                 }
             });
+            
+            // Sembunyikan loading screen setelah halaman dimuat
+            window.addEventListener('load', hideLoadingScreen);
+            
+            // Jika halaman sudah dimuat, langsung sembunyikan loading
+            if (document.readyState === 'complete') {
+                hideLoadingScreen();
+            }
         }
         
         // Inisialisasi aplikasi ketika halaman dimuat
